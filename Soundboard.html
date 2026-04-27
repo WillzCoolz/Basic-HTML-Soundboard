@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Advanced Soundboard</title>
+
+<style>
+body {
+    font-family: Arial, sans-serif;
+    text-align: center;
+    background-color: #f0f0f0;
+    padding-top: 100px;
+}
+
+/* Buttons */
+.sound-btn {
+    position: relative;
+    font-size: 20px;
+    padding: 20px 40px;
+    margin: 15px;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    background-color: #4CAF50;
+    color: white;
+    overflow: hidden;
+    transition: 0.2s;
+}
+
+.sound-btn:hover {
+    background-color: #45a049;
+    transform: scale(1.05);
+}
+
+/* Progress bar at bottom of button */
+.progress {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    height: 5px;
+    width: 0%;
+    background: white;
+    transition: width 0.1s linear;
+}
+
+/* Ripple effect */
+.sound-btn::after {
+    content: "";
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    background: rgba(255,255,255,0.6);
+    border-radius: 50%;
+    transform: scale(0);
+    opacity: 0;
+    pointer-events: none;
+}
+
+.sound-btn.ripple::after {
+    animation: rippleEffect 0.6s ease-out;
+}
+
+@keyframes rippleEffect {
+    0% { transform: scale(0); opacity: 1; }
+    100% { transform: scale(15); opacity: 0; }
+}
+
+/* Volume slider */
+#volume {
+    width: 300px;
+    margin-top: 10px;
+}
+</style>
+</head>
+
+<body>
+
+<h1>Will's Soundboard</h1>
+
+<!-- Buttons with progress bar -->
+<button class="sound-btn" onclick="playSound('sound1', this)">Dun Dun Duun<div class="progress"></div></button>
+<button class="sound-btn" onclick="playSound('sound2', this)">Among us reveal<div class="progress"></div></button>
+<button class="sound-btn" onclick="playSound('sound3', this)">Bruh<div class="progress"></div></button>
+<button class="sound-btn" onclick="playSound('sound4', this)">Woah<div class="progress"></div></button>
+<button class="sound-btn" onclick="playSound('sound5', this)">Fail<div class="progress"></div></button>
+<button class="sound-btn" onclick="playSound('sound6', this)">Bong<div class="progress"></div></button>
+<button class="sound-btn" onclick="playSound('sound7', this)">Get out<div class="progress"></div></button>
+<button class="sound-btn" onclick="playSound('sound8', this)">Sad<div class="progress"></div></button>
+<button class="sound-btn" onclick="playSound('sound9', this)">Cut me off<div class="progress"></div></button>
+<button class="sound-btn" onclick="playSound('sound10', this)">Yaaaay!<div class="progress"></div></button>
+<button class="sound-btn" onclick="playSound('sound11', this)">6 7<div class="progress"></div></button>
+<button class="sound-btn" onclick="playSound('sound12', this)">Huh?<div class="progress"></div></button>
+<button class="sound-btn" onclick="playSound('sound13', this)">Noice<div class="progress"></div></button>
+<button class="sound-btn" onclick="playSound('sound14', this)">Brother Eew<div class="progress"></div></button>
+<button class="sound-btn" onclick="playSound('sound15', this)">Wump Wump<div class="progress"></div></button>
+
+<!-- Audio files -->
+<audio id="sound1" src="MemeSounds/dun-dun-dun-sound-effect-brass_8nFBccR.mp3"></audio>
+<audio id="sound2" src="MemeSounds/among-us-role-reveal-sound.mp3"></audio>
+<audio id="sound3" src="MemeSounds/Bruh_sound_effect.mp3"></audio>
+<audio id="sound4" src="MemeSounds/anime-wow-sound-effect.mp3"></audio>
+<audio id="sound5" src="MemeSounds/spongebob-fail.mp3"></audio>
+<audio id="sound6" src="MemeSounds/taco-bell-bong-sfx.mp3"></audio>
+<audio id="sound7" src="MemeSounds/tuco-get-out.mp3"></audio>
+<audio id="sound8" src="MemeSounds/tf_nemesis.mp3"></audio>
+<audio id="sound9" src="MemeSounds/galaxy-meme-[AudioTrimmer.com].mp3"></audio>
+<audio id="sound10" src="MemeSounds/kids-saying-yay-sound-effect_3.mp3"></audio>
+<audio id="sound11" src="MemeSounds/67_SQlv2Xv.mp3"></audio>
+<audio id="sound12" src="MemeSounds/hoh-sound.mp3"></audio>
+<audio id="sound13" src="MemeSounds/click-nice.mp3"></audio>
+<audio id="sound14" src="MemeSounds/brother-ewwwwwww.mp3"></audio>
+<audio id="sound15" src="MemeSounds/downer_noise.mp3"></audio>
+
+<!-- Volume control -->
+<div style="margin-top: 40px;">
+    <label for="volume">Volume: </label>
+    <span id="volumePercent">100%</span>
+    <br>
+    <input type="range" id="volume" min="0" max="1" step="0.01" value="1">
+</div>
+
+<script>
+var volumeControl = document.getElementById("volume");
+var volumePercent = document.getElementById("volumePercent");
+var sounds = document.querySelectorAll("audio");
+
+// Update volume for all sounds AND update percentage display
+volumeControl.addEventListener("input", function() {
+    var percent = Math.round(volumeControl.value * 100);
+    volumePercent.textContent = percent + "%";
+
+    sounds.forEach(function(sound) {
+        sound.volume = volumeControl.value;
+    });
+});
+
+// Function to play a sound with progress bar and ripple
+function playSound(soundId, buttonElement) {
+    var sound = document.getElementById(soundId);
+    var progressBar = buttonElement.querySelector(".progress");
+
+    // Ripple effect
+    buttonElement.classList.add("ripple");
+    setTimeout(function() {
+        buttonElement.classList.remove("ripple");
+    }, 600);
+
+    // Play the sound
+    sound.currentTime = 0;
+    sound.play();
+
+    // Progress bar update
+    var interval = setInterval(function() {
+        if (sound.duration) {
+            var percent = (sound.currentTime / sound.duration) * 100;
+            progressBar.style.width = percent + "%";
+        }
+        if (sound.ended) {
+            progressBar.style.width = "0%";
+            clearInterval(interval);
+        }
+    }, 50);
+}
+</script>
+
+</body>
+</html>
